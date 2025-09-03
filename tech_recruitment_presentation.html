@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R&S - NeuralFlow Tech</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        
+        .logo {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 30px 0;
+        }
+        
+        .nav-btn {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .section {
+            display: none;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section h2 {
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            color: #ff6b6b;
+            text-align: center;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.15);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .card h3 {
+            color: #4ecdc4;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        .process-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .step {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            padding: 20px;
+            border-radius: 15px;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .step::before {
+            content: counter(step-counter);
+            counter-increment: step-counter;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: rgba(255,255,255,0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .process-steps {
+            counter-reset: step-counter;
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .pros {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4caf50;
+        }
+        
+        .cons {
+            background: rgba(255, 152, 0, 0.2);
+            border: 2px solid #ff9800;
+        }
+        
+        .simulation {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        .challenge-box {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .code-challenge {
+            background: #1e1e1e;
+            color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .code-challenge::before {
+            content: 'JavaScript Challenge';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #ff6b6b;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-family: sans-serif;
+        }
+        
+        .timer {
+            background: rgba(255,107,107,0.2);
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        ul li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #4ecdc4;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-steps {
+                flex-direction: column;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">NeuralFlow Tech</div>
+            <div class="tagline">"Conectando Mentes Brilhantes ao Futuro"</div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('identity')">Identidade</button>
+            <button class="nav-btn" onclick="showSection('recruitment')">Recrutamento</button>
+            <button class="nav-btn" onclick="showSection('selection')">Seleção</button>
+            <button class="nav-btn" onclick="showSection('advantages')">Vantagens</button>
+            <button class="nav-btn" onclick="showSection('challenges')">Desafios</button>
+            <button class="nav-btn" onclick="showSection('simulation')">Simulação</button>
+        </div>
+        
+        <!-- Seção Identidade -->
+        <div id="identity" class="section active">
+            <h2>🏢 Identidade da Empresa</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Sobre a NeuralFlow</h3>
+                    <p><strong>Área:</strong> Inteligência Artificial e Machine Learning</p>
+                    <p><strong>Porte:</strong> Scale-up (200-500 funcionários)</p>
+                    <p><strong>Fundada:</strong> 2019</p>
+                    <p><strong>Sede:</strong> São Paulo, com escritórios em 5 países</p>
+                </div>
+                <div class="card">
+                    <h3>Missão</h3>
+                    <p>Democratizar a IA através de soluções inovadoras que transformam como empresas processam e utilizam dados para tomar decisões inteligentes.</p>
+                </div>
+                <div class="card">
+                    <h3>Valores Fundamentais</h3>
+                    <ul>
+                        <li><strong>Inovação Contínua:</strong> Sempre na vanguarda tecnológica</li>
+                        <li><strong>Diversidade Cognitiva:</strong> Diferentes perspectivas, melhores soluções</li>
+                        <li><strong>Transparência Algorítmica:</strong> IA ética e explicável</li>
+                        <li><strong>Growth Mindset:</strong> Aprendizado constante</li>
+                        <li><strong>Colaboração Global:</strong> Times distribuídos, cultura unificada</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Produtos Principais</h3>
+                    <ul>
+                        <li>NeuralFlow Analytics - Plataforma de IA para análise preditiva</li>
+                        <li>FlowBot - Chatbots inteligentes para empresas</li>
+                        <li>DataMind - Ferramenta de processamento de linguagem natural</li>
+                        <li>VisionCore - Soluções de computer vision</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção Recrutamento -->
+        <div id="recruitment" class="section">
+            <h2>🎯 Estratégia de Recrutamento</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Canais Principais</h3>
+                    <ul>
+                        <li><strong>GitHub & Stack Overflow:</strong> Identificação de talentos técnicos através de contribuições open-source</li>
+                        <li><strong>Kaggle Competitions:</strong> Recrutamento em competições de data science</li>
+                        <li><strong>LinkedIn com IA:</strong> Algoritmo próprio para identificar candidatos ideais</li>
+                        <li><strong>Universidades Parceiras:</strong> Programa de embaixadores em 15+ universidades</li>
+                        <li><strong>Meetups & Hackathons:</strong> Presença ativa em eventos tech</li>
+                        <li><strong>Employee Referral Program:</strong> 70% das contratações via indicação</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Programa "Neural Scouts"</h3>
+                    <p>Sistema inovador onde funcionários atuam como "scouts" de talentos:</p>
+                    <ul>
+                        <li>Bonificação por contratações bem-sucedidas</li>
+                        <li>Treinamento em identificação de talentos</li>
+                        <li>Plataforma interna para indicações</li>
+                        <li>Acompanhamento do sucesso das indicações</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Marketing de Employer Branding</h3>
+                    <ul>
+                        <li><strong>Tech Blog:</strong> Artigos técnicos dos funcionários</li>
+                        <li><strong>Podcast "Neural Talks":</strong> Conversas com líderes tech</li>
+                        <li><strong>Open Source Projects:</strong> Contribuições para a comunidade</li>
+                        <li><strong>Hackathons Internos Públicos:</strong> Eventos abertos à comunidade</li>
+                        <li><strong>Glassdoor Excellence:</strong> 4.7/5 estrelas mantido consistentemente</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção Seleção -->
+        <div id="selection" class="section">
+            <h2>⚡ Processo de Seleção</h2>
+            <div class="process-steps">
+                <div class="step">
+                    <h3>AI Screening</h3>
+                    <p>Análise automatizada de currículos e portfolios usando NLP próprio. Matching inteligente com requisitos da vaga.</p>
+                </div>
+                <div class="step">
+                    <h3>Code Challenge</h3>
+                    <p>Desafio técnico gamificado na plataforma própria "CodeFlow Arena" com ranking e badges.</p>
+                </div>
+                <div class="step">
+                    <h3>Cultural Fit Assessment</h3>
+                    <p>Quiz interativo que avalia alinhamento com valores e metodologias de trabalho da empresa.</p>
+                </div>
+                <div class="step">
+                    <h3>Technical Deep Dive</h3>
+                    <p>Entrevista técnica com pair programming em tempo real usando ferramentas colaborativas.</p>
+                </div>
+                <div class="step">
+                    <h3>Leadership Chat</h3>
+                    <p>Conversa informal com futuro gestor focada em aspirações, motivações e fit com o time.</p>
+                </div>
+                <div class="step">
+                    <h3>Final Decision</h3>
+                    <p>Decisão colaborativa em 48h com feedback detalhado para todos os candidatos.</p>
+                </div>
+            </div>
+            
+            <div class="card" style="margin-top: 30px;">
+                <h3>Ferramentas & Critérios Únicos</h3>
+                <div class="grid">
+                    <div>
+                        <h4>🔧 Ferramentas Tech</h4>
+                        <ul>
+                            <li>CodeFlow Arena (plataforma própria)</li>
+                            <li>HackerRank integrado</li>
+                            <li>Zoom + VS Code Live Share</li>
+                            <li>Slack para comunicação</li>
+                            <li>Notion para documentação</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>📊 Critérios de Avaliação</h4>
+                        <ul>
+                            <li>Competência Técnica (40%)</li>
+                            <li>Problem Solving (25%)</li>
+                            <li>Cultural Fit (20%)</li>
+                            <li>Potencial de Crescimento (10%)</li>
+                            <li>Comunicação (5%)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção Vantagens -->
+        <div id="advantages" class="section">
+            <h2>✅ Vantagens do Nosso Processo</h2>
+            <div class="pros-cons">
+                <div class="card pros">
+                    <h3>🚀 Pontos Fortes</h3>
+                    <ul>
+                        <li><strong>Eficiência com IA:</strong> Redução de 60% no tempo de triagem inicial</li>
+                        <li><strong>Experiência Gamificada:</strong> Candidatos relatam processo divertido e engajador</li>
+                        <li><strong>Feedback Rápido:</strong> Resposta em máximo 48h em cada etapa</li>
+                        <li><strong>Diversidade:</strong> Algoritmo remove bias inconscientes na triagem</li>
+                        <li><strong>Qualidade das Contratações:</strong> 95% dos contratados passam na avaliação de 6 meses</li>
+                        <li><strong>Employer Branding:</strong> Candidatos rejeitados viram embaixadores da marca</li>
+                        <li><strong>Dados & Analytics:</strong> Métricas detalhadas para otimização contínua</li>
+                        <li><strong>Remote-First:</strong> Processo 100% adaptado para contratações globais</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>📈 Resultados Mensuráveis</h3>
+                    <ul>
+                        <li><strong>Time-to-Hire:</strong> 18 dias (média do mercado: 35 dias)</li>
+                        <li><strong>Taxa de Aceitação:</strong> 89% das ofertas são aceitas</li>
+                        <li><strong>Retenção:</strong> 92% dos contratados permanecem após 1 ano</li>
+                        <li><strong>Satisfação:</strong> 4.8/5 na avaliação do processo pelos candidatos</li>
+                        <li><strong>Custo por Contratação:</strong> 40% menor que a média do setor</li>
+                        <li><strong>Diversidade:</strong> 45% mulheres, 60% pessoas não-brancas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Seção Desafios -->
+        <div id="challenges" class="section">
+            <h2>⚠️ Desafios & Pontos de Melhoria</h2>
+            <div class="pros-cons">
+                <div class="card cons">
+                    <h3>🔍 Desafios Identificados</h3>
+                    <ul>
+                        <li><strong>Dependência Tecnológica:</strong> Falhas no sistema podem paralisar o processo</li>
+                        <li><strong>Perfis Não-Tech:</strong> Processo menos efetivo para roles de negócio/vendas</li>
+                        <li><strong>Overengineering:</strong> Alguns candidatos acham o processo muito complexo</li>
+                        <li><strong>Bias Algorítmico:</strong> IA pode perpetuar vieses dos dados de treinamento</li>
+                        <li><strong>Experiência Senior:</strong> Profissionais muito experientes podem resistir aos challenges</li>
+                        <li><strong>Custos de Desenvolvimento:</strong> Manutenção das ferramentas próprias</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🔧 Planos de Melhoria</h3>
+                    <ul>
+                        <li><strong>Backup Manual:</strong> Processo alternativo para falhas técnicas</li>
+                        <li><strong>Tracks Diferenciados:</strong> Processos específicos por área/senioridade</li>
+                        <li><strong>Simplificação Gradual:</strong> Redução de etapas baseada em feedback</li>
+                        <li><strong>Auditoria de Viés:</strong> Revisão trimestral dos algoritmos de IA</li>
+                        <li><strong>Fast-Track Senior:</strong> Processo acelerado para profissionais experientes</li>
+                        <li><strong>Open Source:</strong> Planeja disponibilizar ferramentas para a comunidade</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="challenge-box">
+                <h3>💡 Inovação Contínua</h3>
+                <p>A NeuralFlow investe 15% do tempo do RH em pesquisa e desenvolvimento de novas metodologias de recrutamento, sempre testando e iterando baseado em dados e feedback dos candidatos.</p>
+            </div>
+        </div>
+        
+        <!-- Seção Simulação -->
+        <div id="simulation" class="section">
+            <h2>🎮 Simulação Prática - Code Challenge</h2>
+            <div class="simulation">
+                <h3>Bem-vindo ao CodeFlow Arena!</h3>
+                <p>Você é um Data Scientist aplicando para uma vaga Senior. Este é o desafio técnico da nossa plataforma gamificada.</p>
+            </div>
+            
+            <div class="timer">
+                ⏰ Tempo Restante: 45 minutos | 🏆 Pontos Atuais: 0 | 🎯 Meta: 800 pontos
+            </div>
+            
+            <div class="challenge-box">
+                <h3>🧠 Desafio: Neural Network Efficiency</h3>
+                <p><strong>Contexto:</strong> Você precisa otimizar um algoritmo de recomendação que está consumindo muitos recursos computacionais.</p>
+                
+                <div class="code-challenge">
+// Desafio: Otimize esta função de cálculo de similaridade
+function calculateSimilarity(userA, userB) {
+    let similarity = 0;
+    for (let i = 0; i < userA.preferences.length; i++) {
+        for (let j = 0; j < userB.preferences.length; j++) {
+            if (userA.preferences[i] === userB.preferences[j]) {
+                similarity += Math.abs(userA.ratings[i] - userB.ratings[j]);
+            }
+        }
+    }
+    return similarity;
+}
+
+// Seu objetivo: Reduzir a complexidade de O(n²) para O(n log n) ou melhor
+// Bonus points: Implementar usando técnicas de ML/Data Science
+                </div>
+                
+                <p><strong>Critérios de Avaliação:</strong></p>
+                <ul>
+                    <li>✅ Correção do algoritmo (300 pontos)</li>
+                    <li>⚡ Eficiência temporal (200 pontos)</li>
+                    <li>💾 Uso de memória (150 pontos)</li>
+                    <li>📝 Qualidade do código (100 pontos)</li>
+                    <li>🎯 Casos edge tratados (50 pontos)</li>
+                </ul>
+            </div>
+            
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 Dicas do Sistema</h3>
+                    <ul>
+                        <li>Considere usar estruturas de dados como HashMap</li>
+                        <li>Pense em técnicas de indexação</li>
+                        <li>Vectorização pode ser útil aqui</li>
+                        <li>Lembre-se: código limpo vale pontos!</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>🏅 Sistema de Badges</h3>
+                    <ul>
+                        <li>🏃‍♂️ "Speed Demon" - Soluções em menos de 15min</li>
+                        <li>🧠 "Big Brain" - Complexidade O(n) ou melhor</li>
+                        <li>🎨 "Clean Coder" - Código bem documentado</li>
+                        <li>🔍 "Edge Hunter" - Todos os casos edge cobertos</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="challenge-box">
+                <h3>🎤 Próxima Etapa: Technical Deep Dive</h3>
+                <p>Após submeter sua solução, você terá uma sessão de pair programming de 30 minutos onde irá:</p>
+                <ul>
+                    <li>Explicar seu raciocínio e escolhas técnicas</li>
+                    <li>Implementar melhorias sugeridas pelo entrevistador</li>
+                    <li>Discutir como escalaria a solução para milhões de usuários</li>
+                    <li>Abordar questões de ML Engineering na prática</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showSection(sectionId) {
+            // Esconder todas as seções
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remover classe active dos botões
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Mostrar seção selecionada
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Adicionar classe active ao botão clicado
+            event.target.classList.add('active');
+        }
+        
+        // Adicionar interatividade ao timer na simulação
+        let timeRemaining = 45 * 60; // 45 minutos em segundos
+        let points = 0;
+        
+        function updateTimer() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const timerElement = document.querySelector('.timer');
+            if (timerElement) {
+                timerElement.innerHTML = `⏰ Tempo Restante: ${minutes}:${seconds.toString().padStart(2, '0')} | 🏆 Pontos Atuais: ${points} | 🎯 Meta: 800 pontos`;
+            }
+            
+            if (timeRemaining > 0) {
+                timeRemaining--;
+                // Simular ganho de pontos aleatório
+                if (Math.random() < 0.1) {
+                    points += Math.floor(Math.random() * 20);
+                }
+            }
+        }
+        
+        // Iniciar timer quando na seção de simulação
+        setInterval(() => {
+            const simulationSection = document.getElementById('simulation');
+            if (simulationSection && simulationSection.classList.contains('active')) {
+                updateTimer();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
